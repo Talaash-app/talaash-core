@@ -1,0 +1,36 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Runtime data
+talaash_db/
+talaash_index/
+*.db
+*.sqlite
+*.log
+
+# Environment
+.env
+*.env
+
+# Test artifacts
+test_files/
+sample_files/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
