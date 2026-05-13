@@ -20,18 +20,22 @@ def get_extractor(file_path: str) -> BaseExtractor | None:
 
     if ext == ".pdf":
         from src.extractor.pdf import PDFExtractor
+
         return PDFExtractor()
 
     if ext == ".docx":
         from src.extractor.docx import DocxExtractor
+
         return DocxExtractor()
 
     if ext == ".txt":
         from src.extractor.text import TextExtractor
+
         return TextExtractor()
 
     if ext in {".png", ".jpg", ".jpeg"}:
         from src.extractor.image import ImageExtractor
+
         return ImageExtractor()
 
     return None

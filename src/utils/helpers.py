@@ -52,9 +52,7 @@ def clean_text(text: str) -> str:
     # Remove null bytes and control characters except newline/tab
     text = text.replace("\x00", "")
     text = "".join(
-        ch
-        for ch in text
-        if unicodedata.category(ch)[0] != "C" or ch in ("\n", "\t", "\r")
+        ch for ch in text if unicodedata.category(ch)[0] != "C" or ch in ("\n", "\t", "\r")
     )
     # Collapse multiple blank lines to at most two
     text = re.sub(r"\n{3,}", "\n\n", text)

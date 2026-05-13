@@ -60,6 +60,7 @@ def get_services() -> tuple[IndexService, SearchService]:
         with _lock:
             if _index_svc is None:
                 from src.utils.config import settings
+
                 _index_svc, _search_svc = create_services(settings)
 
     assert _index_svc is not None and _search_svc is not None

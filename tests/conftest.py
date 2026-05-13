@@ -14,9 +14,11 @@ from src.utils.config import Settings
 # Shared embedder — loaded once per test session to avoid re-downloading
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(scope="session")
 def shared_embedder() -> Embedder:
     from src.utils.config import settings
+
     embedder = Embedder(settings.TALAASH_MODEL_NAME, settings.TALAASH_BATCH_SIZE)
     embedder.load()
     return embedder
@@ -26,9 +28,13 @@ def shared_embedder() -> Embedder:
 # Storage isolation — each test gets its own tmp-dir-backed services
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(autouse=True)
-def isolated_services(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shared_embedder: Embedder) -> None:
+def isolated_services(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shared_embedder: Embedder
+) -> None:
     import src.services as svc_mod
+
     index_svc, search_svc = create_services(
         Settings(TALAASH_DB_PATH=str(tmp_path / "db"), TALAASH_INDEX_PATH=str(tmp_path / "idx")),
         embedder=shared_embedder,
@@ -40,6 +46,7 @@ def isolated_services(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, shared_em
 # ---------------------------------------------------------------------------
 # File fixtures
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture()
 def temp_folder(tmp_path: Path) -> Path:
@@ -99,16 +106,78 @@ def sample_image(tmp_path: Path) -> Path:
         return img_path
     except ImportError:
         img_path = tmp_path / "sample.png"
-        png_bytes = bytes([
-            0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
-            0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
-            0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-            0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53,
-            0xDE, 0x00, 0x00, 0x00, 0x0C, 0x49, 0x44, 0x41,
-            0x54, 0x08, 0xD7, 0x63, 0xF8, 0xCF, 0xC0, 0x00,
-            0x00, 0x00, 0x02, 0x00, 0x01, 0xE2, 0x21, 0xBC,
-            0x33, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4E,
-            0x44, 0xAE, 0x42, 0x60, 0x82,
-        ])
+        png_bytes = bytes(
+            [
+                0x89,
+                0x50,
+                0x4E,
+                0x47,
+                0x0D,
+                0x0A,
+                0x1A,
+                0x0A,
+                0x00,
+                0x00,
+                0x00,
+                0x0D,
+                0x49,
+                0x48,
+                0x44,
+                0x52,
+                0x00,
+                0x00,
+                0x00,
+                0x01,
+                0x00,
+                0x00,
+                0x00,
+                0x01,
+                0x08,
+                0x02,
+                0x00,
+                0x00,
+                0x00,
+                0x90,
+                0x77,
+                0x53,
+                0xDE,
+                0x00,
+                0x00,
+                0x00,
+                0x0C,
+                0x49,
+                0x44,
+                0x41,
+                0x54,
+                0x08,
+                0xD7,
+                0x63,
+                0xF8,
+                0xCF,
+                0xC0,
+                0x00,
+                0x00,
+                0x00,
+                0x02,
+                0x00,
+                0x01,
+                0xE2,
+                0x21,
+                0xBC,
+                0x33,
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0x49,
+                0x45,
+                0x4E,
+                0x44,
+                0xAE,
+                0x42,
+                0x60,
+                0x82,
+            ]
+        )
         img_path.write_bytes(png_bytes)
         return img_path

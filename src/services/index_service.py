@@ -54,12 +54,14 @@ class IndexService:
         self._requeue_stale_pending()
 
         from src.utils.config import settings
+
         exts = set(settings.TALAASH_SUPPORTED_EXTENSIONS)
         max_mb = settings.TALAASH_MAX_FILE_SIZE_MB
 
         pattern = "**/*" if recursive else "*"
         candidates = [
-            p for p in folder.glob(pattern)
+            p
+            for p in folder.glob(pattern)
             if p.is_file() and not self._should_skip(p, exts, max_mb)[0]
         ]
         logger.info("Found %d candidate files in %s", len(candidates), folder_path)
@@ -103,6 +105,7 @@ class IndexService:
     def index_file(self, file_path: str) -> bool:
         """Index a single file. Returns True if indexing succeeded."""
         from src.utils.config import settings
+
         p = Path(file_path)
         skip, reason = self._should_skip(
             p, set(settings.TALAASH_SUPPORTED_EXTENSIONS), settings.TALAASH_MAX_FILE_SIZE_MB
@@ -187,12 +190,12 @@ class IndexService:
 
         size_mb = get_file_size_mb(file_path)
         base_info = {
-            "file_path":         path_str,
-            "file_name":         file_path.name,
-            "file_extension":    file_path.suffix.lower(),
-            "file_size_mb":      round(size_mb, 4),
-            "file_hash":         file_hash,
-            "file_type":         existing.get("file_type", "unknown") if existing else "unknown",
+            "file_path": path_str,
+            "file_name": file_path.name,
+            "file_extension": file_path.suffix.lower(),
+            "file_size_mb": round(size_mb, 4),
+            "file_hash": file_hash,
+            "file_type": existing.get("file_type", "unknown") if existing else "unknown",
             "language_detected": existing.get("language_detected", "en") if existing else "en",
         }
 
@@ -227,19 +230,21 @@ class IndexService:
             embedding=embedding,
             metadata={
                 **base_info,
-                "file_type":         doc_type,
+                "file_type": doc_type,
                 "language_detected": language,
-                "last_indexed_at":   now_str,
+                "last_indexed_at": now_str,
             },
         )
 
         # Step 4 — mark indexed in SQLite (both stores now consistent)
-        self.db.save_file_record({
-            **base_info,
-            "file_type":         doc_type,
-            "language_detected": language,
-            "status":            STATUS_INDEXED,
-        })
+        self.db.save_file_record(
+            {
+                **base_info,
+                "file_type": doc_type,
+                "language_detected": language,
+                "status": STATUS_INDEXED,
+            }
+        )
 
         logger.debug("Indexed %s → %s (%s)", file_path.name, doc_type, language)
         return True, path_str, doc_type

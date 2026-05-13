@@ -27,6 +27,7 @@ class VectorStore:
 
         try:
             from chromadb.config import Settings as ChromaSettings
+
             self._client = chromadb.PersistentClient(
                 path=str(path),
                 settings=ChromaSettings(anonymized_telemetry=False),
@@ -49,8 +50,7 @@ class VectorStore:
     ) -> None:
         """Upsert a file's vector, document text, and metadata."""
         clean_meta: dict[str, Any] = {
-            k: v if isinstance(v, (str, int, float, bool)) else str(v)
-            for k, v in metadata.items()
+            k: v if isinstance(v, (str, int, float, bool)) else str(v) for k, v in metadata.items()
         }
         doc_text = text[:32_000] if len(text) > 32_000 else text
         self._collection.upsert(
@@ -108,4 +108,3 @@ class VectorStore:
             metadata={"hnsw:space": "cosine"},
         )
         logger.info("VectorStore cleared")
-

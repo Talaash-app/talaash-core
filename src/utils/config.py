@@ -17,9 +17,7 @@ class Settings(BaseSettings):
 
     TALAASH_DB_PATH: str = Field(default="./talaash_db")
     TALAASH_INDEX_PATH: str = Field(default="./talaash_index")
-    TALAASH_MODEL_NAME: str = Field(
-        default="paraphrase-multilingual-MiniLM-L12-v2"
-    )
+    TALAASH_MODEL_NAME: str = Field(default="paraphrase-multilingual-MiniLM-L12-v2")
     TALAASH_MAX_FILE_SIZE_MB: int = Field(default=100)
     TALAASH_SUPPORTED_EXTENSIONS: list[str] = Field(
         default=[".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg"]

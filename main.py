@@ -41,6 +41,7 @@ _HELP_WORDS = {"help", "what can you do", "how does this work"}
 
 # ── Presentation helpers ──────────────────────────────────────────────────────
 
+
 def _ai(text: str) -> None:
     """Print a panel styled as the AI's response."""
     console.print()
@@ -62,9 +63,7 @@ def _describe_results(results: list[dict], total_indexed: int) -> str:
     for i, r in enumerate(results, 1):
         score = r["relevance_score"]
         confidence = (
-            "Strong match" if score >= 85
-            else "Possible match" if score >= 65
-            else "Weak match"
+            "Strong match" if score >= 85 else "Possible match" if score >= 65 else "Weak match"
         )
         doc_type = r["file_type"].replace("_", " ").title()
         lines += [
@@ -87,6 +86,7 @@ def _describe_results(results: list[dict], total_indexed: int) -> str:
 
 
 # ── Small-talk / command handling ─────────────────────────────────────────────
+
 
 def _handle_special(query: str, index_svc, search_svc) -> bool:
     q = query.lower().strip()
@@ -146,9 +146,11 @@ def _show_stats(index_svc) -> None:
 
 
 def _do_clear(index_svc) -> None:
-    confirm = Prompt.ask(
-        "  [yellow]Clear the entire index?[/yellow] [dim](yes / no)[/dim]"
-    ).strip().lower()
+    confirm = (
+        Prompt.ask("  [yellow]Clear the entire index?[/yellow] [dim](yes / no)[/dim]")
+        .strip()
+        .lower()
+    )
     if confirm in ("yes", "y"):
         index_svc.clear()
         _ai("Done. Index has been cleared.")
@@ -157,6 +159,7 @@ def _do_clear(index_svc) -> None:
 
 
 # ── Commands ──────────────────────────────────────────────────────────────────
+
 
 def cmd_interactive(_args: argparse.Namespace, index_svc, search_svc) -> None:
     """Conversational search REPL."""
@@ -231,6 +234,7 @@ def cmd_index(args: argparse.Namespace, index_svc) -> None:
 
     if args.watch:
         from src.indexer.watcher import FileWatcher
+
         watcher = FileWatcher(index_svc)
         watcher.start(folder)
         console.print("\n[dim]Watching for new files. Press Ctrl+C to stop.[/dim]")
@@ -244,10 +248,12 @@ def cmd_index(args: argparse.Namespace, index_svc) -> None:
 def cmd_server(_args: argparse.Namespace) -> None:
     """Start the FastAPI server."""
     from src.api.server import start_server
+
     start_server()
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="talaash")
@@ -269,6 +275,7 @@ def main() -> None:
     # All other commands: create services once here, pass down
     from src.services import create_services
     from src.utils.config import settings
+
     index_svc, search_svc = create_services(settings)
 
     if args.command == "index":

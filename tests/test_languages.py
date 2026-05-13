@@ -30,8 +30,7 @@ class TestLanguageDetector:
         from src.languages.detector import detect_language
 
         lang = detect_language(
-            "हे माझ्या बँक स्टेटमेंटचे नमुना आहे. व्यवहाराची माहिती येथे आहे."
-            " शिल्लक रक्कम आणि जमा रक्कम दर्शविली आहे."
+            "हे माझ्या बँक स्टेटमेंटचे नमुना आहे. व्यवहाराची माहिती येथे आहे. शिल्लक रक्कम आणि जमा रक्कम दर्शविली आहे."
         )
         # langdetect sometimes misclassifies Marathi as Hindi; both are acceptable
         assert lang in ("mr", "hi")

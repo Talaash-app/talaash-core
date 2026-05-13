@@ -22,15 +22,17 @@ def _seed_doc(text: str, path: str, doc_type: str = "unknown", lang: str = "en")
             "last_indexed_at": "",
         },
     )
-    index_svc.db.save_file_record({
-        "file_path": path,
-        "file_name": Path(path).name,
-        "file_extension": Path(path).suffix,
-        "file_size_mb": 0.01,
-        "file_hash": "abc123",
-        "file_type": doc_type,
-        "language_detected": lang,
-    })
+    index_svc.db.save_file_record(
+        {
+            "file_path": path,
+            "file_name": Path(path).name,
+            "file_extension": Path(path).suffix,
+            "file_size_mb": 0.01,
+            "file_hash": "abc123",
+            "file_type": doc_type,
+            "language_detected": lang,
+        }
+    )
 
 
 class TestSearch:
@@ -45,6 +47,7 @@ class TestSearch:
             lang="en",
         )
         from src.services import get_services
+
         _, search_svc = get_services()
 
         results = search_svc.search("bank statement transactions", n_results=5)
@@ -60,6 +63,7 @@ class TestSearch:
             lang="hi",
         )
         from src.services import get_services
+
         _, search_svc = get_services()
 
         results = search_svc.search("मेरा आधार कार्ड", n_results=5)
@@ -71,6 +75,7 @@ class TestSearch:
         _seed_doc("Random file about cooking recipes", "/docs/recipe.txt", lang="en")
 
         from src.services import get_services
+
         _, search_svc = get_services()
 
         results = search_svc.search("income tax return", n_results=5)
@@ -81,6 +86,7 @@ class TestSearch:
     def test_empty_index_returns_empty_list(self) -> None:
         """Searching an empty index must return [], not raise."""
         from src.services import get_services
+
         _, search_svc = get_services()
 
         results = search_svc.search("anything at all", n_results=5)
@@ -89,6 +95,7 @@ class TestSearch:
     def test_empty_query_returns_empty_list(self) -> None:
         """An empty query must return [], not raise."""
         from src.services import get_services
+
         _, search_svc = get_services()
 
         results = search_svc.search("", n_results=5)

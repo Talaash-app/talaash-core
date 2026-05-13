@@ -90,9 +90,7 @@ def rank_results(
                 if last_dt.tzinfo is None:
                     last_dt = last_dt.replace(tzinfo=UTC)
                 age_days = (now - last_dt).days
-                recency_boost = _RECENCY_MAX_BOOST * math.exp(
-                    -age_days / _RECENCY_HALF_LIFE_DAYS
-                )
+                recency_boost = _RECENCY_MAX_BOOST * math.exp(-age_days / _RECENCY_HALF_LIFE_DAYS)
             except Exception:
                 pass
 

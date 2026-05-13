@@ -17,6 +17,7 @@ router = APIRouter(prefix="/search", tags=["search"])
 
 class SearchRequest(BaseModel):
     """Request body for the search endpoint."""
+
     query: str
     n_results: int = Field(default=3, ge=1, le=20)
 

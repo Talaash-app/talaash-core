@@ -47,10 +47,7 @@ class Embedder:
     def encode(self, text: str) -> list[float]:
         """Encode a single text string into a normalised embedding vector."""
         model = self._get_model()
-        return (
-            model.encode(text, convert_to_numpy=True, normalize_embeddings=True)
-            .tolist()
-        )
+        return model.encode(text, convert_to_numpy=True, normalize_embeddings=True).tolist()
 
     def encode_batch(self, texts: list[str]) -> list[list[float]]:
         """Encode multiple texts in one batched call for indexing efficiency."""
@@ -65,4 +62,3 @@ class Embedder:
             show_progress_bar=False,
         )
         return [e.tolist() for e in embeddings]
-

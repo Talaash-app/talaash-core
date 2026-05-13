@@ -93,6 +93,7 @@ def start_watching(folder_path: str) -> None:
     """Backward-compat: start watching using the singleton IndexService."""
     global _watcher
     from src.services import get_services
+
     index_svc, _ = get_services()
     _watcher = FileWatcher(index_svc)
     _watcher.start(folder_path)

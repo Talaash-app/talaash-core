@@ -28,6 +28,7 @@ _progress_lock = threading.Lock()
 
 class IndexRequest(BaseModel):
     """Request body for starting an index operation."""
+
     folder_path: str
 
 
