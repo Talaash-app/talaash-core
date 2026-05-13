@@ -10,7 +10,6 @@ from src.search.embeddings import Embedder
 from src.services import create_services
 from src.utils.config import Settings
 
-
 # ---------------------------------------------------------------------------
 # Shared embedder — loaded once per test session to avoid re-downloading
 # ---------------------------------------------------------------------------

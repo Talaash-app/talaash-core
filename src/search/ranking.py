@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from src.utils.logger import get_logger
@@ -54,7 +54,7 @@ def rank_results(
         relevance_score key (0-100 integer).
     """
     query_lower = query.lower()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     scored: list[dict[str, Any]] = []
     for result in raw_results:
@@ -88,7 +88,7 @@ def rank_results(
                 else:
                     last_dt = datetime.fromisoformat(str(last_indexed_str))
                 if last_dt.tzinfo is None:
-                    last_dt = last_dt.replace(tzinfo=timezone.utc)
+                    last_dt = last_dt.replace(tzinfo=UTC)
                 age_days = (now - last_dt).days
                 recency_boost = _RECENCY_MAX_BOOST * math.exp(
                     -age_days / _RECENCY_HALF_LIFE_DAYS

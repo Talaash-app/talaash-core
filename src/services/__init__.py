@@ -13,23 +13,23 @@ Usage (tests / custom config):
 from __future__ import annotations
 
 import threading
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.search.embeddings import Embedder
     from src.services.index_service import IndexService
     from src.services.search_service import SearchService
 
-_index_svc: Optional["IndexService"] = None
-_search_svc: Optional["SearchService"] = None
+_index_svc: IndexService | None = None
+_search_svc: SearchService | None = None
 _lock = threading.Lock()
 
 
 def create_services(
     settings,
     *,
-    embedder: Optional["Embedder"] = None,
-) -> tuple["IndexService", "SearchService"]:
+    embedder: Embedder | None = None,
+) -> tuple[IndexService, SearchService]:
     """Create a fresh pair of services from the given settings object.
 
     Args:
@@ -53,7 +53,7 @@ def create_services(
     return index_svc, search_svc
 
 
-def get_services() -> tuple["IndexService", "SearchService"]:
+def get_services() -> tuple[IndexService, SearchService]:
     """Return the module-level singleton services (lazy-created from settings)."""
     global _index_svc, _search_svc
     if _index_svc is None:

@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Generator, Optional
 
 from sqlalchemy import (
     Column,
@@ -47,8 +47,8 @@ class IndexedFile(Base):
     file_type         = Column(String, default="unknown")
     language_detected = Column(String, default="en")
     status            = Column(String, default=STATUS_INDEXED, index=True)
-    last_indexed_at   = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    created_at        = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    last_indexed_at   = Column(DateTime, default=lambda: datetime.now(UTC))
+    created_at        = Column(DateTime, default=lambda: datetime.now(UTC))
 
 
 class Database:
@@ -90,7 +90,7 @@ class Database:
 
     def save_file_record(self, file_info: dict) -> None:
         """Insert or update a file record."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         with self.session() as s:
             existing = s.execute(
                 select(IndexedFile).where(IndexedFile.file_path == file_info["file_path"])
@@ -123,7 +123,7 @@ class Database:
             ).scalar_one_or_none()
             if row:
                 row.status = status
-                row.last_indexed_at = datetime.now(timezone.utc)
+                row.last_indexed_at = datetime.now(UTC)
 
     def delete_file_record(self, path: str) -> None:
         """Remove the record for a path if it exists."""
@@ -144,14 +144,14 @@ class Database:
     # Read
     # ------------------------------------------------------------------
 
-    def get_file_by_path(self, path: str) -> Optional[dict]:
+    def get_file_by_path(self, path: str) -> dict | None:
         with self.session() as s:
             row = s.execute(
                 select(IndexedFile).where(IndexedFile.file_path == path)
             ).scalar_one_or_none()
             return _row_to_dict(row) if row else None
 
-    def get_file_by_hash(self, file_hash: str) -> Optional[dict]:
+    def get_file_by_hash(self, file_hash: str) -> dict | None:
         with self.session() as s:
             row = s.execute(
                 select(IndexedFile).where(IndexedFile.file_hash == file_hash)
@@ -174,7 +174,7 @@ class Database:
         The caller should re-queue them.
         """
         from datetime import timedelta
-        cutoff = datetime.now(timezone.utc) - timedelta(minutes=older_than_minutes)
+        cutoff = datetime.now(UTC) - timedelta(minutes=older_than_minutes)
         with self.session() as s:
             rows = s.execute(
                 select(IndexedFile).where(
@@ -186,7 +186,7 @@ class Database:
 
     def get_all_indexed_files(
         self,
-        limit: Optional[int] = None,
+        limit: int | None = None,
         offset: int = 0,
     ) -> list[dict]:
         """Return indexed file records with optional pagination."""

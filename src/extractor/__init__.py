@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from src.extractor.base import BaseExtractor
 
 
-def get_extractor(file_path: str) -> Optional[BaseExtractor]:
+def get_extractor(file_path: str) -> BaseExtractor | None:
     """Return the appropriate extractor for the given file, or None if unsupported.
 
     Args:

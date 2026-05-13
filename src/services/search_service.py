@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from src.languages.detector import detect_language
 from src.languages.processor import extract_search_intent, process_query
@@ -13,7 +13,6 @@ from src.utils.logger import get_logger
 
 if TYPE_CHECKING:
     from src.search.embeddings import Embedder
-    from src.storage.database import Database
     from src.storage.vector_store import VectorStore
 
 logger = get_logger(__name__)
@@ -31,8 +30,8 @@ class SearchService:
 
     def __init__(
         self,
-        vector_store: "VectorStore",
-        embedder: "Embedder",
+        vector_store: VectorStore,
+        embedder: Embedder,
     ) -> None:
         self.vector_store = vector_store
         self.embedder = embedder
@@ -41,7 +40,7 @@ class SearchService:
         self,
         query: str,
         n_results: int = 3,
-        filters: Optional[dict[str, Any]] = None,
+        filters: dict[str, Any] | None = None,
     ) -> list[dict[str, Any]]:
         """Search indexed files by semantic similarity to query.
 

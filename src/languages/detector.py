@@ -24,7 +24,7 @@ def detect_language(text: str) -> str:
         return _DEFAULT_LANGUAGE
 
     try:
-        from langdetect import detect, LangDetectException
+        from langdetect import detect
 
         lang = detect(text[:2000])
         logger.debug("Detected language: %s", lang)

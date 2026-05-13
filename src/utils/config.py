@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List
-
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -23,7 +21,7 @@ class Settings(BaseSettings):
         default="paraphrase-multilingual-MiniLM-L12-v2"
     )
     TALAASH_MAX_FILE_SIZE_MB: int = Field(default=100)
-    TALAASH_SUPPORTED_EXTENSIONS: List[str] = Field(
+    TALAASH_SUPPORTED_EXTENSIONS: list[str] = Field(
         default=[".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg"]
     )
     TALAASH_BATCH_SIZE: int = Field(default=10)

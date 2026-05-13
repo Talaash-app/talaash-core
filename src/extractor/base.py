@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 
 class BaseExtractor(ABC):
@@ -24,7 +24,7 @@ class BaseExtractor(ABC):
                 error (str | None): Error message if success is False.
         """
 
-    def _ok(self, text: str, metadata: Optional[dict] = None) -> dict[str, Any]:
+    def _ok(self, text: str, metadata: dict | None = None) -> dict[str, Any]:
         """Convenience factory for a successful result."""
         return {
             "text": text,
@@ -33,7 +33,7 @@ class BaseExtractor(ABC):
             "error": None,
         }
 
-    def _fail(self, error: str, metadata: Optional[dict] = None) -> dict[str, Any]:
+    def _fail(self, error: str, metadata: dict | None = None) -> dict[str, Any]:
         """Convenience factory for a failed result."""
         return {
             "text": "",

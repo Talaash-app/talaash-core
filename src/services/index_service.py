@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -30,9 +30,9 @@ class IndexService:
 
     def __init__(
         self,
-        db: "Database",
-        vector_store: "VectorStore",
-        embedder: "Embedder",
+        db: Database,
+        vector_store: VectorStore,
+        embedder: Embedder,
         max_workers: int = 4,
     ) -> None:
         self.db = db
@@ -218,7 +218,7 @@ class IndexService:
         chunks = chunk_text(content, max_chars=512)
         embedding = self.embedder.encode(chunks[0] if chunks else content[:512])
 
-        now_str = str(datetime.now(timezone.utc))
+        now_str = str(datetime.now(UTC))
 
         # Step 3 — write to ChromaDB
         self.vector_store.add_file(

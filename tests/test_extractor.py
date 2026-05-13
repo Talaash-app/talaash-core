@@ -68,6 +68,7 @@ class TestDocxExtractor:
         """A valid DOCX file should be extracted successfully."""
         pytest.importorskip("docx")
         from docx import Document
+
         from src.extractor.docx import DocxExtractor
 
         doc = Document()

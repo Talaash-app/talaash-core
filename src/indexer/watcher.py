@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import threading
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from watchdog.events import (
     FileCreatedEvent,
@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 class _Handler(FileSystemEventHandler):
     """React to filesystem events by updating the index."""
 
-    def __init__(self, index_service: "IndexService") -> None:
+    def __init__(self, index_service: IndexService) -> None:
         self._svc = index_service
 
     def on_created(self, event: FileCreatedEvent) -> None:  # type: ignore[override]
@@ -52,9 +52,9 @@ class _Handler(FileSystemEventHandler):
 class FileWatcher:
     """Watches a folder and keeps the index up-to-date automatically."""
 
-    def __init__(self, index_service: "IndexService") -> None:
+    def __init__(self, index_service: IndexService) -> None:
         self._svc = index_service
-        self._observer: Optional[Observer] = None
+        self._observer: Observer | None = None
         self._lock = threading.Lock()
 
     def start(self, folder_path: str) -> None:
@@ -86,7 +86,7 @@ class FileWatcher:
 # Module-level convenience functions (backward compat)
 # ---------------------------------------------------------------------------
 
-_watcher: Optional[FileWatcher] = None
+_watcher: FileWatcher | None = None
 
 
 def start_watching(folder_path: str) -> None:
