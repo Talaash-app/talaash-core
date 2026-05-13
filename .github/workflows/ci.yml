@@ -30,14 +30,17 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
-      - name: Install ruff
-        run: pip install ruff==0.3.0
+      - name: Install lint tools
+        run: pip install ruff==0.3.0 pip-audit
 
       - name: Check formatting
         run: ruff format --check src/ tests/
 
       - name: Check lint
         run: ruff check src/ tests/
+
+      - name: Audit dependencies
+        run: pip-audit -r requirements.txt -r requirements-dev.txt
 
   test:
     name: Tests
